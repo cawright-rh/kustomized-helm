@@ -1,6 +1,6 @@
 jboss-eap:
-  fullname: sample-a
+  fullname: sample-x
 
   labels:
-    application: sample-a-chart-repo
+    application: sample-x-chart-repo
 
