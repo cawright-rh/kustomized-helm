@@ -2,4 +2,4 @@
   path: /spec/template/spec/containers/0/env/-
   value:
     name: OPENSHIFT_DNS_PING_SERVICE_NAME
-    value: sample-a-ping
+    value: sample-x-ping
