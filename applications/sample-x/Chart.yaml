@@ -1,5 +1,5 @@
 apiVersion: v2
-name: sample-a
+name: sample-x
 description: Helm chart for kubernetes, to be used with kustomize
 
 type: application
