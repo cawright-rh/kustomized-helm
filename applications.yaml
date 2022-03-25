@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kustomize-helm-applications
+spec:
+  generators:
+  - git:
+      repoURL:https://github.com/cawright-rh/kustomized-helm.git
+      revision: HEAD
+      directories:
+      - path: applications/*
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/cawright-rh/kustomized-helm.git
+        targetRevision: HEAD
+        path: '{{path}}'
+        plugin:
+          name: kustomized-helm
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{path.basename}}'
+      syncPolicy:
+        automated:
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true   

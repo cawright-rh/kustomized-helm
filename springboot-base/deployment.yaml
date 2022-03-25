@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    application: app
+  name: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        application: app
+    spec:
+      containers:
+      - env:
+        - name: JGROUPS_PING_PROTOCOL
+          value: dns.DNS_PING
+        - name: OPENSHIFT_DNS_PING_SERVICE_NAME
+          value: app-ping
+        - name: OPENSHIFT_DNS_PING_SERVICE_PORT
+          value: "8888"
+        - name: AUTO_DEPLOY_EXPLODED
+          value: "false"
+        name: app
+        image: abkura/jboss-profiler
+        imagePullPolicy: Always
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /opt/eap/bin/livenessProbe.sh
+          initialDelaySeconds: 120
+        ports:
+        - containerPort: 8778
+          name: jolokia
+          protocol: TCP
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8888
+          name: ping
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /opt/eap/bin/readinessProbe.sh
+          initialDelaySeconds: 120
+        resources:
+          limits:
+            memory: 2Gi
+            cpu: 2000m
+          requests:
+            memory: 2Gi
+            cpu: 2000m
+      terminationGracePeriodSeconds: 75

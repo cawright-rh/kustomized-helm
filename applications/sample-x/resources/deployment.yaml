@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: application-container
+          image: application-image
+          volumeMounts:
+            - mountPath: /usr/local/share/fonts
+              name: application-fonts
+      volumes:
+        - name: application-fonts
+          emptyDir: {}

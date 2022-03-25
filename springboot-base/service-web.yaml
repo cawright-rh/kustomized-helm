@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    description: The web server's http port.
+  labels:
+    application: app
+    monitor: application
+  name: app
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    application: app

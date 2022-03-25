@@ -1,0 +1,4 @@
+fullname: jbosseap-base
+
+labels:
+  application: base-chart-repo

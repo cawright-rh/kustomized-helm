@@ -1,0 +1,14 @@
+apiVersion: v2
+name: sample-a
+description: Helm chart for kubernetes, to be used with kustomize
+
+type: application
+
+version: 0.1.0
+
+appVersion: "1.0"
+
+dependencies:
+- name: jboss-eap
+  version: 0.1.0
+  repository: file://../../jbosseap-base

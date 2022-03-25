@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    application: {{ .Values.labels.application }}
+  name: {{ .Values.fullname }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        application: app
+    spec:
+      containers:
+      - env:
+        - name: JGROUPS_PING_PROTOCOL
+          value: dns.DNS_PING
+        - name: OPENSHIFT_DNS_PING_SERVICE_PORT
+          value: "8888"
+        - name: AUTO_DEPLOY_EXPLODED
+          value: "false"
+        name: application-container
+        image: application-image
+        imagePullPolicy: Always
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /opt/eap/bin/livenessProbe.sh
+          initialDelaySeconds: 60
+        ports:
+        - containerPort: 8778
+          name: jolokia
+          protocol: TCP
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8888
+          name: ping
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /opt/eap/bin/readinessProbe.sh
+          initialDelaySeconds: 60
+        resources:
+          limits:
+            memory: 1Gi
+            cpu: 1000m
+          requests:
+            memory: 1Gi
+            cpu: 1000m
+        volumeMounts:
+          - mountPath: /app/lib/
+            name: application-lib    
+      terminationGracePeriodSeconds: 75
+      initContainers:
+        - image: artifactory.estesinternal.com/docker/busybox
+          name: install-datadog-agent
+          command: ['/bin/sh','-c','wget https://dtdg.co/latest-java-tracer -O /app/lib/datadog-agent.jar']
+          volumeMounts:
+          - mountPath: /app/lib/
+            name: application-lib
+      volumes:
+        - name: application-lib
+          emptyDir: {}

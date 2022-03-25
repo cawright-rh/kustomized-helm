@@ -1,0 +1,6 @@
+jboss-eap:
+  fullname: sample-a
+
+  labels:
+    application: sample-a-chart-repo
+
