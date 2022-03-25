@@ -4,10 +4,10 @@ kind: Kustomization
 resources:
 - ./all.yaml
 
-namePrefix: sample-a-
+namePrefix: sample-x-
 
 commonLabels:
-  application: sample-a
+  application: sample-x
 
 images:
 - name: application-image
