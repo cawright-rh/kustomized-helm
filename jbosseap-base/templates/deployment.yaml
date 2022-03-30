@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   labels:
     application: {{ .Values.labels.application }}
+    {{ if eq .Values.favorite.drink "coffee" }}
+    mug: "true"
+  {{ end }}
   name: {{ .Values.fullname }}
 spec:
   replicas: 1
